@@ -25,15 +25,15 @@ Lenguaje de programación para procesamiento de archivos CSV con números.
 | `Hipnoseta` | Saca cuadrados de una al azar |
 | `Petacereza` | Top 10 datos más grandes |
 | `Jalapeño` | Eliminar una columna |
+| `Ra` | Reasignar datos al azar |
 
 ### Control de Flujo y Variables
 | Palabra | Función |
 |---------|---------|
-| `Ra` | Reasignar datos al azar |
-| `Football` | Operador AND |
-| `Ingeniero` | Condicional IF |
-| `Zombidito` | Condicional ELSE |
-| `Zombistein` | Bucle FOR/WHILE |
+| `Football` | Realizar la acción hasta que pasen 10 seg. |
+| `Ingeniero` | Guarda las columnas en 3 variables |
+| `Zombidito` | Realiza ELSE siempre |
+| `Zombistein` | Bucle FOR 3 veces |
 
 ### Comunicación y Acción Final
 | Palabra | Función |

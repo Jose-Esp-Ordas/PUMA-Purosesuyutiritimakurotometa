@@ -9,7 +9,6 @@ Este módulo implementa las palabras reservadas para operaciones de archivos CSV
 """
 
 import pandas as pd
-import re
 import os
 from typing import Optional, Dict, Any
 

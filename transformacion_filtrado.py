@@ -164,19 +164,20 @@ def ejecutar(codigo, dataframe):
 # --------------------------
 # MODO INTERACTIVO (OPCIONAL)
 # ---------------------------
-print("\n🎮 Modo interactivo - Escribe tus comandos:")
-print("Comandos disponibles:")
-print("  • Maceta col1 col2    - Sumar dos columnas")
-print("  • Hipnoseta columna   - Cuadrados aleatorios")
-print("  • Petacereza columna  - Top 10 más grandes")
-print("  • Jalapeño columna    - Eliminar columna")
-print("  • salir               - Terminar")
-print()
+if __name__ == "__main__":
+    print("\n🎮 Modo interactivo - Escribe tus comandos:")
+    print("Comandos disponibles:")
+    print("  • Maceta col1 col2    - Sumar dos columnas")
+    print("  • Hipnoseta columna   - Cuadrados aleatorios")
+    print("  • Petacereza columna  - Top 10 más grandes")
+    print("  • Jalapeño columna    - Eliminar columna")
+    print("  • salir               - Terminar")
+    print()
 
-while True:
-    comando = input("🌿 > ").strip()
-    if comando.lower() == 'salir':
-        print("👋 ¡Hasta luego!")
-        break
-    if comando:
-        ejecutar(comando, df)
+    while True:
+        comando = input("🌿 > ").strip()
+        if comando.lower() == 'salir':
+            print("👋 ¡Hasta luego!")
+            break
+        if comando:
+            ejecutar(comando, df)
