@@ -102,6 +102,8 @@ class control_de_flujo_variables(Transformer):
         while (time.time() - start_time) < 10:
             count += 1
             result = action_tree
+            print(result)
+            action_tree = items[0]  # Re-evaluar la acción
             time.sleep(0.5)  # Pequeña pausa para no saturar
         
         print(f"✅ Acción ejecutada {count} veces en 10 segundos")
