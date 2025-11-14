@@ -25,7 +25,6 @@ Lenguaje de programación para procesamiento de archivos CSV con números.
 | `Hipnoseta` | Saca cuadrados de una al azar |
 | `Petacereza` | Top 10 datos más grandes |
 | `Jalapeño` | Eliminar una columna |
-| `Ra` | Reasignar datos al azar |
 
 ### Control de Flujo y Variables
 | Palabra | Función |

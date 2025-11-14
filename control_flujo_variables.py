@@ -130,7 +130,7 @@ class control_de_flujo_variables(Transformer):
         return vars_dict
     
     def zombidito(self, items):
-        """Ejecuta dos acciones alternadamente (simula if-else)"""
+        """Ejecuta dos acciones se equivoca y hace siempre las dos"""
         action1 = items[0]
         action2 = items[1]
         
