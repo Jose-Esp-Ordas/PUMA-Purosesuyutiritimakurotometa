@@ -3,23 +3,6 @@ from lark import Lark, Transformer
 import pandas as pd
 from transformacion_filtrado import DataFrameInterpreter, parser as action_parser
 import time
-# ---------------------------
-# CARGAR DATOS DESDE CSV
-# ---------------------------
-try:
-    df = pd.read_csv('datos_prueba.csv')
-    print("📊 DataFrame cargado desde 'datos_prueba.csv':")
-    print(df.head())
-    print(f"\n📋 Columnas disponibles: {list(df.columns)}")
-    print(f"📏 Dimensiones: {df.shape[0]} filas x {df.shape[1]} columnas")
-    print("="*60)
-    print()
-except FileNotFoundError:
-    print("❌ Error: No se encontró el archivo 'datos_prueba.csv'")
-    exit()
-except Exception as e:
-    print(f"❌ Error al cargar el CSV: {e}")
-    exit()
 
 # ---------------------------
 # FASE 1: ANÁLISIS LÉXICO
@@ -87,6 +70,7 @@ parser = Lark(grammar, start="start")
 # ---------------------------
 class control_de_flujo_variables(Transformer):
     def __init__(self, dataframe):
+        super().__init__()
         self.df = dataframe
         self.base_interpreter = DataFrameInterpreter(dataframe)
         
@@ -208,25 +192,42 @@ def ejecutar(codigo, dataframe):
 # --------------------------
 # MODO INTERACTIVO (OPCIONAL)
 # ---------------------------
-print("\n🎮 Modo interactivo - Escribe tus comandos:")
-print("Comandos disponibles:")
-print("  • Football(accion col1 col2)          - Realizar la acción durante 10 seg.")
-print("  • Ingeniero col1 col2 col3            - Guarda 3 columnas en variables")
-print("  • Zombidito(Maceta c1 c2 Hipnoseta c3)- Ejecuta 2 acciones (ELSE)")
-print("  • Zombistein(Petacereza columna)      - Bucle FOR 3 veces")
-print("  • salir                               - Terminar")
-print()
-print("Acciones básicas disponibles:")
-print("  • Maceta col1 col2    - Sumar dos columnas")
-print("  • Hipnoseta columna   - Cuadrados aleatorios")
-print("  • Petacereza columna  - Top 10 más grandes")
-print("  • Jalapeño columna    - Eliminar columna")
-print()
+if __name__ == "__main__":
+    # Cargar CSV solo si se ejecuta directamente
+    try:
+        df = pd.read_csv('datos_prueba.csv')
+        print("📊 DataFrame cargado desde 'datos_prueba.csv':")
+        print(df.head())
+        print(f"\n📋 Columnas disponibles: {list(df.columns)}")
+        print(f"📏 Dimensiones: {df.shape[0]} filas x {df.shape[1]} columnas")
+        print("="*60)
+        print()
+    except FileNotFoundError:
+        print("❌ Error: No se encontró el archivo 'datos_prueba.csv'")
+        exit()
+    except Exception as e:
+        print(f"❌ Error al cargar el CSV: {e}")
+        exit()
+    
+    print("\n🎮 Modo interactivo - Escribe tus comandos:")
+    print("Comandos disponibles:")
+    print("  • Football(accion col1 col2)          - Realizar la acción durante 10 seg.")
+    print("  • Ingeniero col1 col2 col3            - Guarda 3 columnas en variables")
+    print("  • Zombidito(Maceta c1 c2 Hipnoseta c3)- Ejecuta 2 acciones (ELSE)")
+    print("  • Zombistein(Petacereza columna)      - Bucle FOR 3 veces")
+    print("  • salir                               - Terminar")
+    print()
+    print("Acciones básicas disponibles:")
+    print("  • Maceta col1 col2    - Sumar dos columnas")
+    print("  • Hipnoseta columna   - Cuadrados aleatorios")
+    print("  • Petacereza columna  - Top 10 más grandes")
+    print("  • Jalapeño columna    - Eliminar columna")
+    print()
 
-while True:
-    comando = input("🌿 > ").strip()
-    if comando.lower() == 'salir':
-        print("👋 ¡Hasta luego!")
-        break
-    if comando:
-        ejecutar(comando, df)
+    while True:
+        comando = input("🌿 > ").strip()
+        if comando.lower() == 'salir':
+            print("👋 ¡Hasta luego!")
+            break
+        if comando:
+            ejecutar(comando, df)

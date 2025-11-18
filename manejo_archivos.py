@@ -51,7 +51,7 @@ papapum: "Papapum" STRING STRING?
 magnetoseta: "Magnetoseta"
 melonpulta: "melonpulta_gelida"
 
-%import common.ESCAPED_STRING -> STRING
+STRING: /"[^"]*"/
 %ignore /\\s+/
 """
 

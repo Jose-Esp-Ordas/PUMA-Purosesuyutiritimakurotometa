@@ -45,15 +45,12 @@ parser = Lark(grammar, start="start")
 # FASE 3: INTÉRPRETE (EJECUTOR)
 # ---------------------------
 class AccionFinal(Transformer):
-    def __init__(self, dataframe):
-        self.df = dataframe.copy()  # Hacer copia para no modificar el original hasta confirmar
-        self.modified = False
 
     def zerebros(self, args):
         print(f"🧠 Zerebros ")
         try:
             num = numpy.random.randint(1, 4)
-            img = plt.imread(f"resources/zombis{num}.png")
+            img = plt.imread(f"./resources/zombis{num}.png")
             fig, ax = plt.subplots()
             ax.imshow(img)
             ax.axis('off')

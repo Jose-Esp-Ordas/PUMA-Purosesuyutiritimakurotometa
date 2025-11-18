@@ -48,6 +48,7 @@ parser = Lark(grammar, start="start")
 # ---------------------------
 class DataFrameInterpreter(Transformer):
     def __init__(self, dataframe):
+        super().__init__()
         self.df = dataframe
         self.error_occurred = False
         self.error_message = ""

@@ -53,7 +53,8 @@ parser = Lark(grammar, start="start")
 # ---------------------------
 class DataFrameInterpreter(Transformer):
     def __init__(self, dataframe):
-        self.df = dataframe.copy()  # Hacer copia para no modificar el original hasta confirmar
+        super().__init__()
+        self.df = dataframe
         self.modified = False
     
     def maceta(self, args):
