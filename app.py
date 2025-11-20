@@ -44,8 +44,26 @@ def tokenize(code):
     while pos < len(code):
         m = master.match(code, pos)
         if not m:
-            error_context = code[pos:min(pos+20, len(code))]
-            raise SyntaxError(f"Carácter inesperado en posición {pos}: '{error_context}'")
+            error_char = code[pos]
+            error_context = code[max(0, pos-10):min(pos+20, len(code))]
+            
+            # Mensajes de error específicos
+            if error_char in '[]{}':
+                raise SyntaxError(f"❌ Error léxico en posición {pos}: Carácter '{error_char}' no válido.\n"
+                                f"   Contexto: ...{error_context}...\n"
+                                f"   💡 Usa paréntesis () en lugar de corchetes o llaves")
+            elif error_char in '!@#$%^&*+=<>?/\\|~`':
+                raise SyntaxError(f"❌ Error léxico en posición {pos}: Carácter especial '{error_char}' no reconocido.\n"
+                                f"   Contexto: ...{error_context}...\n"
+                                f"   💡 Revisa la sintaxis del comando")
+            elif error_char == "'":
+                raise SyntaxError(f"❌ Error léxico en posición {pos}: Comillas simples no permitidas.\n"
+                                f"   Contexto: ...{error_context}...\n"
+                                f"   💡 Usa comillas dobles \" \" para cadenas de texto")
+            else:
+                raise SyntaxError(f"❌ Error léxico en posición {pos}: Carácter inesperado '{error_char}'.\n"
+                                f"   Contexto: ...{error_context}...\n"
+                                f"   💡 Verifica que el comando esté escrito correctamente")
         typ = m.lastgroup
         if typ != "SKIP":
             tokens.append((typ, m.group()))
@@ -177,29 +195,19 @@ class InterpretadorFinal(Transformer):
     def action(self, items):
         """Procesa el nodo action y retorna el resultado"""
         return items[0]
-       
+
 # ---------------------------
-# Función principal
+# Función para mostrar ayuda completa
 # ---------------------------
-def main():
+def mostrar_ayuda_completa():
+    """Muestra todos los comandos disponibles después de cargar archivo"""
+    print("\n" + "="*60)
+    print("📚 COMANDOS DISPONIBLES")
     print("="*60)
-    print("🌿 PUMA - Purosesuyutiritimakurotometa 🌱")
-    print("="*60)
-    print("\n⚠️  Nota: Primero debes abrir un archivo con 'Sol \"archivo.csv\"' para trabajar con datos")
-    print("="*60)
-    
-    # DataFrame inicialmente vacío, se carga con Sol
-    df = None
-    
-    # Crear una única instancia del intérprete que se mantiene durante toda la sesión
-    interpreter = InterpretadorFinal(pd.DataFrame())
-    
-    # Modo interactivo
-    print("\n🎮 Modo interactivo - Escribe tus comandos:")
     print("\n📁 Manejo de archivos:")
     print("  • Sol \"archivo.csv\"              - Abrir archivo CSV")
-    print("  • Carnivora [\"archivo.csv\"]      - Guardar archivo")
-    print("  • Papapum \"ruta\" [formato]      - Exportar archivo")
+    print("  • Carnivora \"archivo.csv\"      - Guardar archivo")
+    print("  • Papapum \"ruta\" [formato]       - Exportar archivo")
     print("  • Magnetoseta                     - Info del archivo")
     print("  • melonpulta_gelida               - Cerrar archivo")
     print("\n🔄 Transformación y filtrado:")
@@ -216,11 +224,33 @@ def main():
     print("  • rosa N                          - Acción aleatoria N veces")
     print("\n🧠 Salida:")
     print("  • Zerebros                        - Fin del programa")
-    print("\n📊 Utilidades:")
-    print("  • mostrar                         - Ver DataFrame")
-    print("  • columnas                        - Ver columnas")
-    print("  • salir                           - Terminar")
+    print("  • salir                           - Terminar sesión")
+    print("="*60)
     print()
+
+# ---------------------------
+# Función principal
+# ---------------------------
+def main():
+    print("="*60)
+    print("🌿 PUMA - Purosesuyutiritimakurotometa 🌱")
+    print("="*60)
+    print("\n⚠️  IMPORTANTE: Debes comenzar cargando un archivo CSV")
+    print("="*60)
+    print("\n🚀 Para comenzar usa:")
+    print("  • Sol \"archivo.csv\"    - Cargar archivo CSV")
+    print("  • salir                 - Terminar programa")
+    print("="*60)
+    print()
+    
+    # DataFrame inicialmente vacío, se carga con Sol
+    df = None
+    archivo_cargado = False  # Bandera para verificar si ya se cargó un archivo
+    
+    # Crear una única instancia del intérprete que se mantiene durante toda la sesión
+    interpreter = InterpretadorFinal(pd.DataFrame())
+    
+    print("🎮 Modo interactivo - Esperando comando Sol...\n")
     
     while True:
         try:
@@ -233,30 +263,10 @@ def main():
             if not comando:
                 continue
             
-            if comando.lower() == 'mostrar':
-                if df is None:
-                    print("\n⚠️  No hay archivo cargado. Usa 'Sol \"archivo.csv\"' primero")
-                    print("="*60)
-                    print()
-                    continue
-                print("\n📊 DataFrame actual:")
-                print(df)
-                print(f"\n📋 Columnas: {list(df.columns)}")
-                print(f"📏 Dimensiones: {df.shape[0]} filas x {df.shape[1]} columnas")
-                print("="*60)
-                print()
-                continue
-            
-            if comando.lower() == 'columnas':
-                if df is None:
-                    print("\n⚠️  No hay archivo cargado. Usa 'Sol \"archivo.csv\"' primero")
-                    print("="*60)
-                    print()
-                    continue
-                print("\n📋 Columnas disponibles:")
-                for i, col in enumerate(df.columns, 1):
-                    tipo = df[col].dtype
-                    print(f"  {i}. {col} (tipo: {tipo})")
+            # Verificar que el primer comando sea Sol (excepto salir)
+            if not archivo_cargado and not comando.startswith('Sol'):
+                print("\n⚠️  ERROR: Debes cargar un archivo primero usando:")
+                print("   Sol \"archivo.csv\"")
                 print("="*60)
                 print()
                 continue
@@ -267,9 +277,12 @@ def main():
             try:
                 tokens = tokenize(comando)
             except SyntaxError as e:
-                print(f"❌ Error léxico: {e}")
-                print("💡 Comandos válidos:")
-                print("   • Zerebros")
+                print(f"{e}")
+                print("\n💡 Comandos básicos disponibles:")
+                if not archivo_cargado:
+                    print("   • Sol \"archivo.csv\" - Cargar archivo")
+                else:
+                    print("   • Usa un comando válido (escribe 'ayuda' para ver todos)")
                 print("="*60)
                 print()
                 continue
@@ -282,18 +295,22 @@ def main():
                 print()
             except UnexpectedToken as e:
                 print(f"❌ Error sintáctico: Token inesperado '{e.token}'")
+                print(f"   Se esperaba: {', '.join(str(x) for x in e.expected)}")
                 print("💡 Verifica que el comando esté bien escrito")
                 print("="*60)
                 print()
                 continue
             except UnexpectedInput as e:
-                print(f"❌ Error sintáctico: Entrada inesperada")
+                print(f"❌ Error sintáctico: Entrada inesperada en la posición {e.pos_in_stream}")
                 print("💡 Verifica el formato del comando")
+                if not archivo_cargado:
+                    print("   Recuerda: Sol \"archivo.csv\"")
                 print("="*60)
                 print()
                 continue
             except LarkError as e:
                 print(f"❌ Error sintáctico: {e}")
+                print("💡 Revisa la estructura del comando")
                 print("="*60)
                 print()
                 continue
@@ -319,6 +336,11 @@ def main():
                     print(df.head())
                     print(f"\n📋 Columnas: {list(df.columns)}")
                     print(f"📏 Dimensiones: {df.shape[0]} filas x {df.shape[1]} columnas")
+                    
+                    # Marcar que ya se cargó un archivo y mostrar ayuda completa
+                    if not archivo_cargado:
+                        archivo_cargado = True
+                        mostrar_ayuda_completa()
                 
                 # Si se modificó el DataFrame con transformaciones, actualizar
                 if hasattr(interpreter.filtrado_interpreter, 'modified') and interpreter.filtrado_interpreter.modified:
@@ -376,11 +398,15 @@ def main():
                 print(f"❌ Error: Columna no encontrada: {e}")
                 if df is not None:
                     print(f"💡 Columnas disponibles: {list(df.columns)}")
+                else:
+                    print(f"💡 No hay archivo cargado")
                 print("="*60)
                 print()
                 continue
             except Exception as e:
                 print(f"❌ Error inesperado durante la ejecución: {e}")
+                import traceback
+                traceback.print_exc()
                 print("="*60)
                 print()
                 continue
@@ -393,6 +419,8 @@ def main():
             break
         except Exception as e:
             print(f"❌ Error inesperado: {e}")
+            import traceback
+            traceback.print_exc()
             continue
 
 if __name__ == "__main__":
@@ -400,3 +428,5 @@ if __name__ == "__main__":
         main()
     except Exception as e:
         print(f"❌ Error crítico: {e}")
+        import traceback
+        traceback.print_exc()
