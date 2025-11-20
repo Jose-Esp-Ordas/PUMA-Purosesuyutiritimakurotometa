@@ -12,7 +12,7 @@ def tokenize(code):
     tokens = []
     token_specs = [
         ("SOL", r'Sol'),                      # Abrir archivo
-        ("CARNIVORA", r'Carnívora'),          # Guardar archivo
+        ("CARNIVORA", r'Carnivora'),          # Guardar archivo
         ("PAPAPUM", r'Papapum'),              # Exportar archivo
         ("MAGNETOSETA", r'Magnetoseta'),      # Info del archivo
         ("MELONPULTA", r'melonpulta_gelida'), # Cerrar archivo
@@ -46,7 +46,7 @@ grammar = """
 start: sol | carnivora | papapum | magnetoseta | melonpulta
 
 sol: "Sol" STRING
-carnivora: "Carnívora" STRING?
+carnivora: "Carnivora" STRING?
 papapum: "Papapum" STRING STRING?
 magnetoseta: "Magnetoseta"
 melonpulta: "melonpulta_gelida"
@@ -161,14 +161,14 @@ class ManejoArchivos(Transformer):
     
     # Método del Transformer para ejecutar comando carnivora
     def carnivora(self, items):
-        """Método del Transformer - ejecuta comando Carnívora"""
+        """Método del Transformer - ejecuta comando Carnivora"""
         # items contiene los valores ya procesados (puede estar vacío si no hay path)
         ruta = items[0] if items else None
         return self._carnivora(ruta)
     
     def _carnivora(self, ruta_archivo: Optional[str] = None):
         """
-        Carnívora - Comando para guardar el archivo CSV actual
+        Carnivora - Comando para guardar el archivo CSV actual
         
         Args:
             ruta_archivo: Ruta donde guardar. Si es None, sobrescribe el archivo actual
@@ -181,7 +181,7 @@ class ManejoArchivos(Transformer):
             return {
                 "error": "Error semántico: No hay ningún archivo cargado. Use 'Sol' primero para abrir un archivo",
                 "tipo": "SEMANTICO",
-                "comando": "Carnívora"
+                "comando": "Carnivora"
             }
         
         # Si no se proporciona ruta, usar la del archivo actual
@@ -190,7 +190,7 @@ class ManejoArchivos(Transformer):
                 return {
                     "error": "Error semántico: No hay ruta de archivo definida. Proporcione una ruta",
                     "tipo": "SEMANTICO",
-                    "comando": "Carnívora"
+                    "comando": "Carnivora"
                 }
             ruta_archivo = self.nombre_archivo
         
@@ -211,7 +211,7 @@ class ManejoArchivos(Transformer):
             
             return {
                 "exito": True,
-                "mensaje": f"Carnívora: Archivo guardado exitosamente en '{os.path.basename(ruta_archivo)}'",
+                "mensaje": f"Carnivora: Archivo guardado exitosamente en '{os.path.basename(ruta_archivo)}'",
                 "archivo": ruta_archivo,
                 "filas_guardadas": len(self.archivo_actual)
             }
@@ -439,7 +439,7 @@ if __name__ == "__main__":
     print("\n[MODO INTERACTIVO] Escribe tus comandos:")
     print("Comandos disponibles:")
     print("  • Sol <ruta.csv>               - Abrir archivo CSV")
-    print("  • Carnívora [ruta.csv]         - Guardar archivo")
+    print("  • Carnivora [ruta.csv]         - Guardar archivo")
     print("  • Papapum <ruta> [formato]     - Exportar archivo")
     print("  • Magnetoseta                  - Info del archivo actual")
     print("  • melonpulta_gelida            - Cerrar archivo")

@@ -10,6 +10,7 @@ from comando_especial import DataFrameInterpreter as ComandoEspecial
 from control_flujo_variables import control_de_flujo_variables as Flujo
 from manejo_archivos import ManejoArchivos 
 
+
 # --------------------------- 
 # FASE 1: ANÁLISIS LÉXICO
 # ---------------------------
@@ -18,7 +19,7 @@ def tokenize(code):
     token_specs = [
         ("ZEREBROS", r'Zerebros'),
         ("SOL", r'Sol'),
-        ("CARNIVORA", r'Carnívora'),
+        ("CARNIVORA", r'Carnivora'),
         ("PAPAPUM", r'Papapum'),
         ("MAGNETOSETA", r'Magnetoseta'),
         ("MELONPULTA", r'melonpulta_gelida'),
@@ -64,7 +65,7 @@ start: zerebros | sol | carnivora | papapum | magnetoseta | melonpulta | maceta 
 zerebros: "Zerebros"
 
 sol: "Sol" STRING
-carnivora: "Carnívora" STRING?
+carnivora: "Carnivora" STRING?
 papapum: "Papapum" STRING STRING?
 magnetoseta: "Magnetoseta"
 melonpulta: "melonpulta_gelida"
@@ -167,6 +168,15 @@ class InterpretadorFinal(Transformer):
     
     def NUMBER(self, token):
         return token.value
+    
+    def start(self, items):
+        """Procesa el nodo start y retorna el resultado del comando"""
+        # items[0] contiene el resultado del comando
+        return items[0]
+    
+    def action(self, items):
+        """Procesa el nodo action y retorna el resultado"""
+        return items[0]
        
 # ---------------------------
 # Función principal
@@ -181,11 +191,14 @@ def main():
     # DataFrame inicialmente vacío, se carga con Sol
     df = None
     
+    # Crear una única instancia del intérprete que se mantiene durante toda la sesión
+    interpreter = InterpretadorFinal(pd.DataFrame())
+    
     # Modo interactivo
     print("\n🎮 Modo interactivo - Escribe tus comandos:")
     print("\n📁 Manejo de archivos:")
     print("  • Sol \"archivo.csv\"              - Abrir archivo CSV")
-    print("  • Carnívora [\"archivo.csv\"]      - Guardar archivo")
+    print("  • Carnivora [\"archivo.csv\"]      - Guardar archivo")
     print("  • Papapum \"ruta\" [formato]      - Exportar archivo")
     print("  • Magnetoseta                     - Info del archivo")
     print("  • melonpulta_gelida               - Cerrar archivo")
@@ -287,7 +300,7 @@ def main():
             
             # 3️⃣ Fase de interpretación
             try:
-                interpreter = InterpretadorFinal(df if df is not None else pd.DataFrame())
+                # Reutilizar el mismo intérprete para mantener el estado
                 result = interpreter.transform(tree)
                 
                 # Si Sol cargó un archivo, actualizar el DataFrame
@@ -295,6 +308,7 @@ def main():
                     df = interpreter.base_interpreter.archivo_actual
                     
                     # Actualizar el DataFrame en todos los intérpretes
+                    interpreter.df = df
                     interpreter.filtrado_interpreter.df = df
                     interpreter.especial_interpreter.df = df
                     interpreter.flujo_interpreter.df = df
@@ -309,8 +323,18 @@ def main():
                 # Si se modificó el DataFrame con transformaciones, actualizar
                 if hasattr(interpreter.filtrado_interpreter, 'modified') and interpreter.filtrado_interpreter.modified:
                     df = interpreter.filtrado_interpreter.df
+                    # Sincronizar el DataFrame actualizado con base_interpreter para que Carnivora pueda guardarlo
+                    interpreter.base_interpreter.archivo_actual = df
                     print("\n📊 DataFrame actualizado:")
                     print(df)
+                
+                # Si comando especial modifico el DataFrame, actualizar
+                if hasattr(interpreter.especial_interpreter, 'df') and interpreter.especial_interpreter.df is not None:
+                    # Verificar si el DataFrame cambio
+                    if df is None or not df.equals(interpreter.especial_interpreter.df):
+                        df = interpreter.especial_interpreter.df
+                        # Sincronizar con base_interpreter
+                        interpreter.base_interpreter.archivo_actual = df
                 
                 # Si es un resultado de un comando (dict), mostrarlo
                 if isinstance(result, dict):
