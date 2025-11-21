@@ -75,7 +75,10 @@ class DataFrameInterpreter(Transformer):
         
         # Crear nueva columna con la suma
         new_col_name = f"{col1}_mas_{col2}"
-        self.df[new_col_name] = self.df[col1] + self.df[col2]
+        if new_col_name in self.df.columns:
+            self.df[new_col_name] = self.df[new_col_name] + self.df[col1] + self.df[col2]
+        else:
+            self.df[new_col_name] = self.df[col1] + self.df[col2]
         self.modified = True
         
         print(f"✅ Nueva columna '{new_col_name}' creada:")
@@ -95,7 +98,10 @@ class DataFrameInterpreter(Transformer):
         
         # Crear nueva columna con los cuadrados
         new_col_name = f"{col}_cuadrado"
-        self.df[new_col_name] = self.df[col] ** 2
+        if new_col_name in self.df.columns:
+            self.df[new_col_name] = self.df[new_col_name] + self.df[col] ** 2
+        else:
+            self.df[new_col_name] = self.df[col] ** 2
         self.modified = True
         
         print(f"✅ Nueva columna '{new_col_name}' creada:")
