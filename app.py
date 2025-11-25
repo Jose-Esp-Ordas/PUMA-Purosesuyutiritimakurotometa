@@ -221,10 +221,9 @@ def mostrar_ayuda_completa():
     print("  • Zombidito (accion1 accion2)     - Ejecutar ambas")
     print("  • Zombistein (accion)             - Bucle 3 veces")
     print("\n🎲 Comando especial:")
-    print("  • rosa N                          - Acción aleatoria N veces")
+    print("  • Rosa N                          - Acción aleatoria N veces")
     print("\n🧠 Salida:")
     print("  • Zerebros                        - Fin del programa")
-    print("  • salir                           - Terminar sesión")
     print("="*60)
     print()
 
@@ -239,7 +238,7 @@ def main():
     print("="*60)
     print("\n🚀 Para comenzar usa:")
     print("  • Sol \"archivo.csv\"    - Cargar archivo CSV")
-    print("  • salir                 - Terminar programa")
+    print("  • Zerebros              - Salir del programa")
     print("="*60)
     print()
     
@@ -256,17 +255,14 @@ def main():
         try:
             comando = input("🌿 > ").strip()
             
-            if comando.lower() in ['salir', 'exit', 'quit']:
-                print("👋 ¡Hasta luego!")
-                break
-            
             if not comando:
                 continue
             
-            # Verificar que el primer comando sea Sol (excepto salir)
-            if not archivo_cargado and not comando.startswith('Sol'):
+            # Verificar que el primer comando sea Sol o Zerebros (excepto salir)
+            if not archivo_cargado and not comando.startswith('Sol') and comando != 'Zerebros':
                 print("\n⚠️  ERROR: Debes cargar un archivo primero usando:")
                 print("   Sol \"archivo.csv\"")
+                print("   O salir del programa con: Zerebros")
                 print("="*60)
                 print()
                 continue

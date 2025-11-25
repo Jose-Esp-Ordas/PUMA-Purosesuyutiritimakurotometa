@@ -51,7 +51,7 @@ ingeniero: "Ingeniero" COLUMN COLUMN COLUMN
 zombidito: "Zombidito" "(" action action ")"
 zombistein: "Zombistein" "(" action ")"
 
-action: maceta | hipnoseta | petacereza | jalapeno
+action: maceta | hipnoseta | petacereza | jalapeno 
 
 maceta: "Maceta" COLUMN COLUMN
 hipnoseta: "Hipnoseta" COLUMN

@@ -49,7 +49,7 @@ class AccionFinal(Transformer):
     def zerebros(self, args):
         print(f"🧠 Zerebros ")
         try:
-            num = numpy.random.randint(1, 4)
+            num = numpy.random.randint(1, 5)  # Genera números del 1 al 4
             img = plt.imread(f"./resources/zombis{num}.png")
             fig, ax = plt.subplots()
             ax.imshow(img)
@@ -58,10 +58,11 @@ class AccionFinal(Transformer):
             plt.show()
             exit(0)
         except FileNotFoundError:
-            print("    ⚠️ No se encontró 'zombis.png', mostrando zombis alternativa")
-            self.cabra_grafico()
+            print(f"    ⚠️ No se encontró el archivo 'zombis{num}.png'")
+            exit(0)
         except Exception as e:
             print(f"    ⚠️ Error al mostrar imagen: {e}")
+            exit(0)
     
 # ---------------------------
 # Función principal

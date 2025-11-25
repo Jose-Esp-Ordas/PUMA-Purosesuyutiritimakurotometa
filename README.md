@@ -13,7 +13,7 @@ Lenguaje de programación para procesamiento de archivos CSV con números.
 | Palabra | Función |
 |---------|---------|
 | `Sol` | Abrir archivo |
-| `Carnívora` | Guardar archivo |
+| `Carnivora` | Guardar archivo |
 | `Papapum` | Exportar archivo |
 | `Magnetoseta` | Ver info del archivo |
 | `Melonpulta gelida` | Cerrar archivo |
